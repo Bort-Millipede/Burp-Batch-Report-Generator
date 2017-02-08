@@ -1,0 +1,55 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Burp Extender API source files #
+IBurpCollaboratorClientContext.java
+IBurpCollaboratorInteraction.java
+IBurpExtender.java
+IBurpExtenderCallbacks.java
+IContextMenuFactory.java
+IContextMenuInvocation.java
+ICookie.java
+IExtensionHelpers.java
+IExtensionStateListener.java
+IHttpListener.java
+IHttpRequestResponse.java
+IHttpRequestResponsePersisted.java
+IHttpRequestResponseWithMarkers.java
+IHttpService.java
+IInterceptedProxyMessage.java
+IIntruderAttack.java
+IIntruderPayloadGenerator.java
+IIntruderPayloadGeneratorFactory.java
+IIntruderPayloadProcessor.java
+IMenuItemHandler.java
+IMessageEditor.java
+IMessageEditorController.java
+IMessageEditorTab.java
+IMessageEditorTabFactory.java
+IParameter.java
+IProxyListener.java
+IRequestInfo.java
+IResponseInfo.java
+IResponseKeywords.java
+IResponseVariations.java
+IScanIssue.java
+IScannerCheck.java
+IScannerInsertionPoint.java
+IScannerInsertionPointProvider.java
+IScannerListener.java
+IScanQueueItem.java
+IScopeChangeListener.java
+ISessionHandlingAction.java
+ITab.java
+ITempFile.java
+ITextEditor.java
