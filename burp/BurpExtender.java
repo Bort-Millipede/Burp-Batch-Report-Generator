@@ -197,6 +197,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 			xmlButton.setEnabled(false);
 			inscopeCheck.setEnabled(false);
 			httpsCheck.setEnabled(false);
+			boolean mergeAllSet = mergeAllCheck.isEnabled();
 			mergeAllCheck.setEnabled(false);
 			destDirButton.setEnabled(false);
 			filenameDateCheck.setEnabled(false);
@@ -249,7 +250,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 						htmlButton.setEnabled(true);
 						xmlButton.setEnabled(true);
 						inscopeCheck.setEnabled(true);
-						httpsCheck.setEnabled(true);
+						if(!mergeAllSet) httpsCheck.setEnabled(true);
 						mergeAllCheck.setEnabled(true);
 						destDirButton.setEnabled(true);
 						filenameDateCheck.setEnabled(true);
@@ -264,7 +265,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 					htmlButton.setEnabled(true);
 					xmlButton.setEnabled(true);
 					inscopeCheck.setEnabled(true);
-					httpsCheck.setEnabled(true);
+					if(!mergeAllSet) httpsCheck.setEnabled(true);
 					mergeAllCheck.setEnabled(true);
 					destDirButton.setEnabled(true);
 					filenameDateCheck.setEnabled(true);
@@ -394,7 +395,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 			htmlButton.setEnabled(true);
 			xmlButton.setEnabled(true);
 			inscopeCheck.setEnabled(true);
-			httpsCheck.setEnabled(true);
+			if(!mergeAllSet) httpsCheck.setEnabled(true);
 			mergeAllCheck.setEnabled(true);
 			destDirButton.setEnabled(true);
 			filenameDateCheck.setEnabled(true);
