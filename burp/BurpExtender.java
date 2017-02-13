@@ -68,7 +68,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 	public void registerExtenderCallbacks(IBurpExtenderCallbacks cb) {
 		callbacks = cb;
 		helpers = callbacks.getHelpers();
-		name = "Batch Report Generator";
+		name = "Batch Scan Report Generator";
 		callbacks.setExtensionName(name+" v"+VERSION);
 		
 		//initialized default settings

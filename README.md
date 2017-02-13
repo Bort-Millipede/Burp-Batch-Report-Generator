@@ -1,11 +1,11 @@
-# Burp Batch Report Generator
+# Burp Batch Scan Report Generator
 ![Figure 1-1](extender-snapshot.png?raw=true "")
 
 Small Burp Suite Extension to generate multiple scan reports by host with just a few clicks. Works with Burp Suite Professional only.
 
 #Usage
 1. Load the burp-batch-report-generator-[VERSION].jar file in the Burp Suite "Extender" tab.
-2. When ready to generate reports, navigate to the new "Batch Report Generator" tab.
+2. When ready to generate reports, navigate to the new "Batch Scan Report Generator" tab.
 3. Select the output format for the reports that will be generated (HTML or XML).
 4. Select whether to generate reports for all hosts or only hosts set in the Target->Scope tab.
 5. Select whether to merge HTTP and HTTPS into one host report, or to have separate reports for both
