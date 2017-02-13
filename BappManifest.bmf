@@ -1,0 +1,11 @@
+Uuid: bc4ad87282e64fc4b35e9b9b05bac1dd
+ExtensionType: 1
+Name: Batch Scan Report Generator
+ScreenVersion: 0.1
+SerialVersion: 0
+MinPlatformVersion: 0
+ProOnly: True
+Author: Jeffrey Cap
+ShortDescription: Generate multiple scan reports by host with just a few clicks
+EntryPoint: build/libs/batch-scan-report-generator-all.jar
+BuildCommand: gradle fatJar
