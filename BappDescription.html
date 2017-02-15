@@ -1,1 +1,43 @@
-<p>Generate multiple scan reports by host with just a few clicks.</p>
+<p>This extension can be used to generate multiple scan reports by host with just a few clicks.</p>
+<p>Usage:</p>
+<ol>
+	<li>Load the burp-batch-report-generator-[VERSION].jar file in the Burp 
+	Suite "Extender" tab.</li>
+	<li>When ready to generate reports, navigate to the new "Batch Scan Report 
+	Generator" tab.</li>
+	<li>Select the output format for the reports that will be generated (HTML or 
+	XML).</li>
+	<li>Select whether to generate reports for all hosts or only hosts set in 
+	the Target-&gt;Scope tab.</li>
+	<li>Select whether to merge HTTP and HTTPS into one host report, or to have 
+	separate reports for both<ol>
+		<li>If the option is selected, one report will be generated for the host 
+		that includes findings for HTTP:80 and HTTPS:443. The report filename 
+		will be in the following format: "httphttps__[HOST]-burp.[FORMAT]".</li>
+		<li>If the option is selected, Any findings for other ports/protocols on 
+		the host will be reported in separate file(s) with the following 
+		filename format: "[PROTOCOL]__[HOST]_[PORT]-burp.[FORMAT]".</li>
+	</ol>
+	</li>
+	<li>Select whether to merge all protocols and ports for a host into one 
+	report. The report filename will be in the following format: 
+	"[HOST]_all-burp.[FORMAT]".<ol>
+		<li>This option automatically sets the "Merge HTTP/HTTPS" option.</li>
+	</ol>
+	</li>
+	<li>Select the output directory for the reports by clicking the "Select 
+	folder ..." button and selecting a directory. If the selected directory does 
+	not yet exist, it will be created when the reports are generated.</li>
+	<li>Select whether to append the date to the report filenames. The report 
+	filenames will be in the following format: "[FILENAME]-MMDDYYYY.[FORMAT]".</li>
+	<li>Once all options have been set, click the "Generate Report(s)" button to 
+	start report generation.<ol>
+		<li>The status of the report generation will be displayed next to the 
+		button and will be updated in real time.</li>
+		<li>A more verbose status of the generation will be printed in the 
+		Extender-&gt;Output tab for the Extension. This will include a list of the 
+		absolute paths to every report file that is successfully generated.</li>
+	</ol>
+	</li>
+</ol>
+
