@@ -7,6 +7,6 @@ SerialVersion: 0
 MinPlatformVersion: 0
 ProOnly: True
 Author: Jeffrey Cap
-ShortDescription: Generate multiple scan reports by host with just a few clicks
+ShortDescription: Generates multiple scan reports by host with just a few clicks.
 EntryPoint: build/libs/batch-scan-report-generator-all.jar
 BuildCommand: gradle fatJar
