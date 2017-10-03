@@ -1,10 +1,10 @@
 # Burp Batch Scan Report Generator
 ![Figure 1-1](extender-snapshot.png?raw=true "")
 
-Small Burp Suite Extension to generate multiple scan reports by host with just a few clicks. Works with Burp Suite Professional only.
+Small Burp Suite Extension to generate multiple scan reports by host with just a few clicks. Works with Burp Suite Professional only (can be successfully loaded into Burp Suite Free but will not perform any function).
 
-#Usage
-1. Load the burp-batch-report-generator-[VERSION].jar file in the Burp Suite "Extender" tab.
+# Usage
+1. Load the burp-batch-scan-report-generator-[VERSION].jar file in the Burp Suite "Extender" tab.
 2. When ready to generate reports, navigate to the new "Batch Scan Report Generator" tab.
 3. Select the output format for the reports that will be generated (HTML or XML).
 4. Select whether to generate reports for all hosts or only hosts set in the Target->Scope tab.
@@ -14,7 +14,8 @@ Small Burp Suite Extension to generate multiple scan reports by host with just a
 6. Select whether to merge all protocols and ports for a host into one report. The report filename will be in the following format: "[HOST]_all-burp.[FORMAT]".
 	1. This option automatically sets the "Merge HTTP/HTTPS" option.
 7. Select the output directory for the reports by clicking the "Select folder ..." button and selecting a directory. If the selected directory does not yet exist, it will be created when the reports are generated.
-8. Select whether to append the date to the report filenames. The report filenames will be in the following format: "[FILENAME]-MMDDYYYY.[FORMAT]".
+8. Select whether to append the date to the report filenames, and choose the desired date from the dropdown box. The report filenames will be in the following format: "[FILENAME]-[DATE_FORMAT].[FORMAT]".
+	1. The following date formats are available: MMDDYYYY, DDMMYYYY, YYYYMMDD, MMDDYY, DDMMYY, YYMMDD
 9. Once all options have been set, click the "Generate Report(s)" button to start report generation.
 	1. The status of the report generation will be displayed next to the button and will be updated in real time.
 	2. A more verbose status of the generation will be printed in the Extender->Output tab for the Extension. This will include a list of the absolute paths to every report file that is successfully generated.
@@ -26,7 +27,7 @@ Requires Java Development Kit 7 or higher and Burp Suite Professional jar file.
 2. Open a terminal and navigate to the directory containing the Burp-Batch-Report-Generator directory.
 3. Create a directory called build in order to store the generated Java .class files.
 4. Issue the following command to compile the extension: javac -cp [PATH_TO_BURP_PRO_JAR] -d build Burp-Batch-Report-Generator/burp/BurpExtender.java
-5. Issue the following command to create the extension jar file (including the trailing period; named burp-batch-report-generator.jar): jar -vcf burp-burp-batch-report-generator.jar -C build .
+5. Issue the following command to create the extension jar file (including the trailing period; named burp-batch-scan-report-generator.jar): jar -vcf burp-batch-scan-report-generator.jar -C build .
 
 
 Copyright (C) 2017 Jeffrey Cap (Bort_Millipede)

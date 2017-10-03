@@ -1,7 +1,7 @@
 /*
 	BurpExtender.java
 	
-	v0.1 (2/7/2017)
+	v0.2 (8/31/2017)
 	
 	Small Burp Suite Extension to generate multiple scan reports by host with just a few clicks. Works with Burp Suite Professional only.
 */
@@ -15,6 +15,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -57,11 +58,13 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 	private JButton destDirButton;
 	private JLabel destDirLabel;
 	private JCheckBox filenameDateCheck;
+	private JComboBox<String> dateFormatChooser;
 	private JButton generateButton;
 	private JLabel statusLabel;
 	
 	//constants
-	private static final String VERSION = "0.1";
+	private static final String VERSION = "0.2";
+	private static final String[] dateFormats = {"MMddyyyy","ddMMyyyy","yyyyMMdd","MMddyy","ddMMyy","yyMMdd"};
 	
 	//IBurpExtender methods
 	@Override
@@ -95,10 +98,10 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 		
 		JPanel innerPanel = new JPanel(new GridLayout(7,2,2,0));
 		innerPanel.add(new JLabel("Report Output Format:",SwingConstants.RIGHT));
-		htmlButton = new JRadioButton("HTML",true); //ActionListener needed
+		htmlButton = new JRadioButton("HTML",true);
 		htmlButton.addActionListener(this);
 		htmlButton.setActionCommand("HTML");
-		xmlButton = new JRadioButton("XML",false); //ActionListener needed
+		xmlButton = new JRadioButton("XML",false);
 		xmlButton.addActionListener(this);
 		xmlButton.setActionCommand("XML");
 		ButtonGroup bg = new ButtonGroup();
@@ -109,32 +112,40 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 		buttonPanel.add(xmlButton);
 		innerPanel.add(buttonPanel);
 		innerPanel.add(new JLabel("Report On In-Scope Sites Only:",SwingConstants.RIGHT));
-		inscopeCheck = new JCheckBox((String) null,true); //ActionListener needed
+		inscopeCheck = new JCheckBox((String) null,true);
 		inscopeCheck.addActionListener(this);
 		innerPanel.add(inscopeCheck);
 		innerPanel.add(new JLabel("Merge HTTP (port 80) and HTTPS (port 443) For Reports:",SwingConstants.RIGHT));
-		httpsCheck = new JCheckBox((String) null,true); //ActionListener needed
+		httpsCheck = new JCheckBox((String) null,true);
 		httpsCheck.addActionListener(this);
 		innerPanel.add(httpsCheck);
 		innerPanel.add(new JLabel("One Host Per Report (Combine All Protocols and Ports):",SwingConstants.RIGHT));
-		mergeAllCheck = new JCheckBox((String) null,false); //ActionListener needed
+		mergeAllCheck = new JCheckBox((String) null,false);
 		mergeAllCheck.addActionListener(this);
 		innerPanel.add(mergeAllCheck);
 		innerPanel.add(new JLabel("Report Output Root Directory:",SwingConstants.RIGHT));
 		destDirChooser = new JFileChooser();
 		destDirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		JPanel dirPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		destDirButton = new JButton("Select folder ..."); //ActionListener needed
+		destDirButton = new JButton("Select folder ...");
 		destDirButton.addActionListener(this);
 		destDirLabel = new JLabel(destDir.getAbsolutePath());
 		dirPanel.add(destDirButton);
 		dirPanel.add(destDirLabel);
 		innerPanel.add(dirPanel);
 		innerPanel.add(new JLabel("Append Date To Report Filenames:",SwingConstants.RIGHT));
-		filenameDateCheck = new JCheckBox((String) null,false); //ActionListener needed
+		JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		filenameDateCheck = new JCheckBox("Date Format:",false);
 		filenameDateCheck.addActionListener(this);
-		innerPanel.add(filenameDateCheck);
-		generateButton = new JButton("Generate Report(s)"); //ActionListener needed
+		datePanel.add(filenameDateCheck);
+		dateFormatChooser = new JComboBox<String>();
+		for(int i=0;i<dateFormats.length;i++) {
+			dateFormatChooser.addItem(dateFormats[i].toUpperCase());
+		}
+		dateFormatChooser.setEnabled(false);
+		datePanel.add(dateFormatChooser);
+		innerPanel.add(datePanel);
+		generateButton = new JButton("Generate Report(s)");
 		generateButton.addActionListener(this);
 		innerPanel.add(generateButton);
 		statusLabel = new JLabel();
@@ -181,6 +192,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 		} else if(source == filenameDateCheck) {
 			JCheckBox jcb = (JCheckBox) source;
 			fileDate = jcb.isSelected();
+			dateFormatChooser.setEnabled(fileDate);
 		} else if(source == generateButton) {
 			Thread genThread = new Thread(new GenerateThread());
 			genThread.start();
@@ -197,10 +209,12 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 			xmlButton.setEnabled(false);
 			inscopeCheck.setEnabled(false);
 			httpsCheck.setEnabled(false);
-			boolean mergeAllSet = mergeAllCheck.isEnabled();
+			boolean mergeAllSet = mergeAll;
 			mergeAllCheck.setEnabled(false);
 			destDirButton.setEnabled(false);
+			boolean dateCheckSet = fileDate;
 			filenameDateCheck.setEnabled(false);
+			dateFormatChooser.setEnabled(false);
 			callbacks.printOutput("Reading Full List of Issues");
 			statusLabel.setText("<html><font color=\'orange\'>Reading Full List of Issues...</font></html>");
 			
@@ -373,9 +387,8 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 					IScanIssue[] issueList = reportIssues.get(filename);
 					if(fileDate) {
 						filename = filename.substring(0,filename.length()-(reportFormat.toLowerCase().length()+1))+"-";
-						Date today = new Date();
-						SimpleDateFormat sdf = new SimpleDateFormat("MMDDYYYY");
-						filename += sdf.format(today)+"."+reportFormat.toLowerCase();
+						SimpleDateFormat sdf = new SimpleDateFormat(dateFormats[dateFormatChooser.getSelectedIndex()]);
+						filename += sdf.format(new Date())+"."+reportFormat.toLowerCase();
 					}
 					File reportFile = new File(destDir,filename);
 					callbacks.generateScanReport(reportFormat.toUpperCase(),issueList,reportFile);
@@ -399,6 +412,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 			mergeAllCheck.setEnabled(true);
 			destDirButton.setEnabled(true);
 			filenameDateCheck.setEnabled(true);
+			dateFormatChooser.setEnabled(dateCheckSet);
 		}
 	}
 }
