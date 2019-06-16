@@ -2,8 +2,8 @@ Uuid: bc4ad87282e64fc4b35e9b9b05bac1dd
 ExtensionType: 1
 Name: Batch Scan Report Generator
 RepoName: batch-scan-report-generator
-ScreenVersion: 0.2
-SerialVersion: 1
+ScreenVersion: 2.0
+SerialVersion: 2
 MinPlatformVersion: 0
 ProOnly: True
 Author: Jeffrey Cap (Bort_Millipede)
