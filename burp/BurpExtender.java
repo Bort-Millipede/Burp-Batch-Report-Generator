@@ -149,6 +149,7 @@ public class BurpExtender implements IBurpExtender,ITab,ActionListener {
 		generateButton.addActionListener(this);
 		innerPanel.add(generateButton);
 		statusLabel = new JLabel();
+		statusLabel.putClientProperty("html.disable", null);
 		innerPanel.add(statusLabel);
 		component.add(innerPanel);
 		callbacks.customizeUiComponent(component);
