@@ -53,3 +53,6 @@ ISessionHandlingAction.java
 ITab.java
 ITempFile.java
 ITextEditor.java
+
+.gradle/
+build/
