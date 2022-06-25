@@ -18,10 +18,11 @@ Small Burp Suite Extension to generate multiple scan reports by host with just a
 9. Select the output directory for the reports by clicking the "Select folder ..." button and selecting a directory. If the selected directory does not yet exist, it will be created when the reports are generated.
 10. Select whether to append the date to the report filenames, and choose the desired date from the dropdown box. The report filenames will be in the following format: ```[FILENAME]-[DATE_FORMAT].[FORMAT]```.
 	1. The following date formats are available: MMDDYYYY, DDMMYYYY, YYYYMMDD, MMDDYY, DDMMYY, YYMMDD
-11. Select whether to save generated reports to sub-directories by host (named after host).
+11. Select whether to save generated reports to sub-directories by host (named after host and created when the reports are generated).
 12. Once all options have been set, click the "Generate Report(s)" button to start report generation.
 	1. The status of the report generation will be displayed next to the button and will be updated in real time.
 	2. A more verbose status of the generation will be printed in the Extender->Output tab for the Extension. This will include a list of the absolute paths to every report file that is successfully generated.
+	3. Any errors encountered during report generation will be printed to the Extender->Errors tab for the Extension.
 
 # Building
 Requires Java Development Kit 8 or higher, and Gradle 4 or higher.
