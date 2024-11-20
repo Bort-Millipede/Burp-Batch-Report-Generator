@@ -1,17 +1,19 @@
 apply plugin: 'java'
 
-version = 0.3
+version = 0.4
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'net.portswigger.burp.extender:burp-extender-api:1.7.13'
+    implementation 'net.portswigger.burp.extender:burp-extender-api:+'
 }
 
-targetCompatibility = '1.8'
-sourceCompatibility = '1.8'
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 sourceSets {
     main {
@@ -22,8 +24,8 @@ sourceSets {
 }
 
 task fatJar(type: Jar) {
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    archiveBaseName = "${rootProject.name}"
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 

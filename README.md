@@ -25,11 +25,11 @@ Small Burp Suite Extension to generate multiple scan reports by host with just a
 	3. Any errors encountered during report generation will be printed to the Extender->Errors tab for the Extension.
 
 # Building
-Requires Java Development Kit 8 or higher, and Gradle 4 or higher.
+Requires OpenJDK 17 or higher, and Gradle 8 or higher.
 
 1. Clone the Burp-Batch-Report-Generator repository.
 2. Open a terminal and navigate to the Burp-Batch-Report-Generator directory.
-3. Issue the following command to compile the extension and create the extension jar file (named Burp-Batch-Report-Generator-all-[VERSION].jar): ```gradle fatJar```
+3. Issue the following command to compile the extension and create the extension jar file (named Burp-Batch-Report-Generator-[VERSION].jar): ```gradle fatJar```
 
 # Copyright
 Copyright (C) 2017, 2022 Jeffrey Cap (Bort_Millipede)
