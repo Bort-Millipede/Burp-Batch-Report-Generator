@@ -1,7 +1,7 @@
 /*
 	BurpExtender.java
 	
-	v0.3 (6/24/2022)
+	v0.4 (11/19/2024)
 	
 	Small Burp Suite Extension to generate multiple scan reports by host with just a few clicks. Works with Burp Suite Professional only.
 */
@@ -20,6 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
@@ -78,7 +79,7 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 	private JLabel statusLabel;
 	
 	//constants
-	private static final String VERSION = "0.3";
+	private static final String VERSION = "0.4";
 	private static final String[] DATE_FORMATS = {"MMddyyyy","ddMMyyyy","yyyyMMdd","MMddyy","ddMMyy","yyMMdd"};
 	private static final String OPTION_PREFIX = "bort.batchreport";
 	
@@ -88,7 +89,7 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 		callbacks = cb;
 		helpers = callbacks.getHelpers();
 		name = "Batch Scan Report Generator";
-		callbacks.setExtensionName(name+" v"+VERSION);
+		callbacks.setExtensionName(name);
 		
 		//initialize default settings, then restore saved settings (if any)
 		setDefaultOptions();
@@ -129,6 +130,8 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 		
 		callbacks.addSuiteTab(this);
 		callbacks.registerExtensionStateListener(this);
+		
+		callbacks.printOutput(name+" v"+VERSION+" initialized.");
 	}
 	
 	
@@ -286,8 +289,7 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 	public void actionPerformed(ActionEvent ae) {
 		Object source = ae.getSource();
 		if(source == defaultSettingsButton) {
-			Thread resetterThread = new Thread(new ResetSettingsThread());
-			resetterThread.start();
+			SwingUtilities.invokeLater(new ResetSettingsThread());
 		} else if((source == htmlButton) || (source == xmlButton)) {
 			String comStr = ae.getActionCommand();
 			if(comStr.equalsIgnoreCase("HTML")) {
@@ -343,8 +345,7 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 		} else if(source == createSubDirectoriesCheck) {
 			createSubDirectories = createSubDirectoriesCheck.isSelected();
 		} else if(source == generateButton) {
-			Thread genThread = new Thread(new GenerateThread());
-			genThread.start();
+			new Thread(new GenerateThread()).start();
 		}
 	}
 	
@@ -403,7 +404,12 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 				ArrayList<String> ppList = null;
 				if(!siteKeys.contains(reqHost)) {
 					ppList = new ArrayList<String>();
-					ppList.add(reqProt+":"+Integer.toString(reqPort));
+					if(reqPort!=-1) {
+						ppList.add(reqProt+":"+Integer.toString(reqPort));
+					} else { //some potential for an edge case here where getDefaultPort() returns -1: will update later if it becomes a problem
+						ppList.add(reqProt+":"+Integer.toString(issueUrl.getDefaultPort()));
+					}
+					
 					sitesDict.put(reqHost,ppList);
 					siteKeys = sitesDict.keySet();
 				} else {
@@ -411,13 +417,21 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 					boolean found = false;
 					Iterator<String> ppListItr = ppList.iterator();
 					while(ppListItr.hasNext()) {
-						if(ppListItr.next().equals(reqProt+":"+Integer.toString(reqPort))) {
+						String next = ppListItr.next();
+						if(next.equals(reqProt+":"+Integer.toString(reqPort))) {
+							found = true;
+							break;
+						} else if(next.equals(reqProt+":"+Integer.toString(issueUrl.getDefaultPort()))) { //some potential for an edge case here where getDefaultPort() returns -1: will update later if it becomes a problem
 							found = true;
 							break;
 						}
 					}
 					if(!found) {
-						ppList.add(reqProt+":"+Integer.toString(reqPort));
+						if(reqPort!=-1) {
+							ppList.add(reqProt+":"+Integer.toString(reqPort));
+						} else { //some potential for an edge case here where getDefaultPort() returns -1: will update later if it becomes a problem
+							ppList.add(reqProt+":"+Integer.toString(issueUrl.getDefaultPort()));
+						}
 						sitesDict.put(reqHost,ppList);
 					}
 				}
@@ -512,20 +526,8 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 				}
 				
 				//Determine if issues should be filtered by severity and/or confidence
-				boolean sevFilter = false;
-				boolean conFilter = false;
-				for(int k=0;k<severities.length;k++) {
-					if(severities[k]!=true) {
-						sevFilter = true;
-						break;
-					}
-				}
-				for(int k=0;k<confidences.length;k++) {
-					if(confidences[k]!=true) {
-						conFilter = true;
-						break;
-					}
-				}
+				boolean sevFilter = severities[0] || severities[1] || severities[2] || severities[3] || severities[4];
+				boolean conFilter = confidences[0] || confidences[1] || confidences[2];
 				
 				Set<String> reportSites = reportList.keySet();
 				Hashtable<String,IScanIssue[]> reportIssues = new Hashtable<String,IScanIssue[]>();
@@ -536,7 +538,8 @@ public class BurpExtender implements IBurpExtender,ITab,IExtensionStateListener,
 					ArrayList<String> prefixList = reportList.get(site);
 					Iterator<String> prefixListItr = prefixList.iterator();
 					while(prefixListItr.hasNext()) {
-						IScanIssue[] issueTempList = callbacks.getScanIssues(prefixListItr.next());
+						String prefix = prefixListItr.next();
+						IScanIssue[] issueTempList = callbacks.getScanIssues(prefix);
 						for(int k=0;k<issueTempList.length;k++) {
 							//filter issues by severity and/or confidence (if applicable)
 							if(sevFilter) {
